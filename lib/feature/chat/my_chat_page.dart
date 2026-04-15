@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// [MyChatPage] quản lý các cuộc hội thoại và tin nhắn.
 class MyChatPage extends StatefulWidget {
   const MyChatPage({super.key});
 
@@ -10,6 +11,8 @@ class MyChatPage extends StatefulWidget {
 class _MyChatPageState extends State<MyChatPage> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(appBar: AppBar(title: Text("Chat Page")));
+    return Scaffold(
+      appBar: AppBar(title: const Text("Chat Page")),
+    );
   }
 }

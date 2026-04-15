@@ -10,6 +10,8 @@ void main() {
   runApp(const MyApp());
 }
 
+/// [MyApp] là widget gốc của ứng dụng.
+/// Cấu hình theme và router chính ở đây.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -19,30 +21,42 @@ class MyApp extends StatelessWidget {
       title: 'Navigation 2.0',
       debugShowCheckedModeBanner: false,
 
+      // Cấu hình giao diện (Theme) cho toàn bộ ứng dụng
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: AppColors.primary),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme),
       ),
+      
+      // Kết nối với cấu hình GoRouter đã định nghĩa
       routerConfig: appRouter,
     );
   }
 }
 
+/// [MyRootPage] đóng vai trò là "Shell" (lớp vỏ) cho phần điều hướng chính.
+/// Nó chứa BottomNavigationBar và hiển thị nội dung của các nhánh điều hướng (branches).
 class MyRootPage extends StatelessWidget {
+  /// [navigationShell] quản lý trạng thái của các branch trong StatefulShellRoute.
   final StatefulNavigationShell navigationShell;
+  
   const MyRootPage({super.key, required this.navigationShell});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Hiển thị nội dung của nhánh hiện tại
       body: navigationShell,
+      
+      // Thanh điều hướng phía dưới (Bottom Navigation Bar)
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         backgroundColor: AppColors.white,
         indicatorColor: Colors.transparent,
         onDestinationSelected: (index) {
+          // Chuyển sang nhánh (branch) tương ứng khi nhấn vào icon
           navigationShell.goBranch(
             index,
+            // Nếu nhấn lại vào icon đang chọn, nó sẽ quay về trang đầu của nhánh đó
             initialLocation: index == navigationShell.currentIndex,
           );
         },

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation_2/core/theme/app_text_styles.dart';
 
+/// [MyProfilePage] hiển thị thông tin cá nhân của người dùng.
+/// Từ đây có thể điều hướng sang trang Cài đặt (Settings).
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({super.key});
 
@@ -13,10 +15,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Profle Page")),
+      appBar: AppBar(title: const Text("Profile Page")),
       body: Center(
         child: TextButton(
           onPressed: () {
+            // Điều hướng sâu vào trang cài đặt (sub-route)
             context.go("/profile/setting");
           },
           child: Text("Go Setting Page", style: AppTextStyles.h1_bold),

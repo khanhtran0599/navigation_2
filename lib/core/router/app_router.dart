@@ -8,6 +8,7 @@ import 'package:navigation_2/feature/profile/sub_page/my_setting_page.dart';
 import 'package:navigation_2/feature/splash/splash_page.dart';
 import 'package:navigation_2/main.dart';
 
+/// Cấu hình điều hướng (Router) cho toàn bộ ứng dụng sử dụng gói [go_router].
 final appRouter = GoRouter(
   initialLocation: "/splash",
   routes: <RouteBase>[
