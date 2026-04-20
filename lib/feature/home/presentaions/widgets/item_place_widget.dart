@@ -5,24 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:navigation_2/core/constants/icon_asset_url.dart';
 import 'package:navigation_2/core/theme/app_button.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
+import 'package:navigation_2/feature/home/domain/entities/place_dog_walk_entity.dart';
 
-class PlaceDogWalk {
-  final String id;
-  final String imageUrl;
-  final String address;
-  final double distance;
-  final double pricePerHour;
-  PlaceDogWalk({
-    required this.imageUrl,
-    required this.address,
-    required this.distance,
-    required this.pricePerHour,
-    required this.id,
-  });
-}
+
 
 class PlaceItemWidget extends StatelessWidget {
-  final PlaceDogWalk placeDogWalk;
+  final PlaceDogWalkEntity placeDogWalk;
   final VoidCallback onTap;
   const PlaceItemWidget({
     super.key,

@@ -1,9 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:navigation_2/feature/chat/my_chat_page.dart';
+import 'package:navigation_2/feature/home/domain/entities/place_dog_walk_entity.dart';
 import 'package:navigation_2/feature/home/my_home_page.dart';
-import 'package:navigation_2/feature/home/pages/my_list_place_dogwalk_page%20copy.dart';
-import 'package:navigation_2/feature/home/pages/my_place_dogwalk_detail_page.dart';
-import 'package:navigation_2/feature/home/widgets/item_place_widget.dart';
+import 'package:navigation_2/feature/home/presentaions/pages/my_list_place_dogwalk_page%20copy.dart';
+import 'package:navigation_2/feature/home/presentaions/pages/my_place_dogwalk_detail_page.dart';
 import 'package:navigation_2/feature/moment/my_moment_page.dart';
 import 'package:navigation_2/feature/profile/my_profile_page.dart';
 import 'package:navigation_2/feature/profile/sub_page/my_setting_page.dart';
@@ -33,7 +33,7 @@ final appRouter = GoRouter(
                   path: "myListPlace",
                   builder: (context, state) {
                     var title = state.uri.queryParameters["title"];
-                    var listPlace = state.extra as List<PlaceDogWalk>;
+                    var listPlace = state.extra as List<PlaceDogWalkEntity>;
                     return MyListPlaceDogWalkPage(
                       title: title,
                       listPlace: listPlace,
