@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:navigation_2/core/constants/icon_asset_url.dart';
 import 'package:navigation_2/core/theme/app_button.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
 import 'package:navigation_2/core/theme/app_text_field.dart';
@@ -24,6 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
       address: "123 Đường ABC, Quận 1",
       distance: 1.2,
       pricePerHour: 5,
+      id: '1',
     ),
     PlaceDogWalk(
       imageUrl:
@@ -31,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
       address: "45 Đường Lê Lợi, Quận 3",
       distance: 2.5,
       pricePerHour: 4,
+      id: '2',
     ),
     PlaceDogWalk(
       imageUrl:
@@ -38,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
       address: "89 Công viên Gia Định, Gò Vấp",
       distance: 3.8,
       pricePerHour: 3,
+      id: '3',
     ),
   ];
 
@@ -48,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
       address: "Khu đô thị Sala, Quận 2",
       distance: 5.0,
       pricePerHour: 8,
+      id: '4',
     ),
     PlaceDogWalk(
       imageUrl:
@@ -55,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
       address: "Công viên Vinhomes Central Park",
       distance: 6.2,
       pricePerHour: 7,
+      id: '5',
     ),
   ];
 
@@ -98,19 +105,27 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(16.0),
               child: MyTextFieldPrimary(
                 hinText: 'Kiyv, Ukraine',
-                // suffixIcon: SvgPicture.asset(
-                //   AppIconUrl.iconFilter,
-                //   width: 20,
-                //   height: 20,
-                // ),
-                // prefixIcon: SvgPicture.asset(
-                //   AppIconUrl.iconFilter,
-                //   width: 20,
-                //   height: 20,
-                // ),
+                prefixIcon: SvgPicture.asset(
+                  AppIconUrl.iconLocation,
+                  width: 20,
+                  height: 20,
+                ),
+                suffixIcon: SvgPicture.asset(
+                  AppIconUrl.iconFilter,
+                  width: 20,
+                  height: 20,
+                ),
               ),
             ),
-            SelectionTitleAllWidget(title: "Near you", onTap: () {}),
+            SelectionTitleAllWidget(
+              title: "Near you",
+              onTap: () {
+                context.go(
+                  "/home/myListPlace/?title=Near you",
+                  extra: listNearYou,
+                );
+              },
+            ),
             const SizedBox(height: 16),
             SizedBox(
               height: 270,
@@ -126,13 +141,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: PlaceItemWidget(
                       placeDogWalk: placeDogWalk,
-                      onTap: () {},
+                      onTap: () {
+                        context.go(
+                          "/home/myDetail/${placeDogWalk.id}",
+                          extra: listNearYou,
+                        );
+                      },
                     ),
                   );
                 },
               ),
             ),
-            SelectionTitleAllWidget(title: "Suggested", onTap: () {}),
+            SelectionTitleAllWidget(
+              title: "Suggested",
+              onTap: () {
+                context.go(
+                  "/home/myListPlace/?title=Suggested",
+                  extra: listSuggested,
+                );
+              },
+            ),
             const SizedBox(height: 16),
             SizedBox(
               height: 270,
@@ -148,7 +176,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: PlaceItemWidget(
                       placeDogWalk: placeDogWalk,
-                      onTap: () {},
+                      onTap: () {
+                        context.go("/home/myDetail/${placeDogWalk.id}");
+                      },
                     ),
                   );
                 },
@@ -158,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //   child: TextButton(
             //     onPressed: () {
             //       // Điều hướng đến trang con của Home
-            //       context.go("/home/subHome");
+            //       context.go("/home/myListPlace");
             //     },
             //     child: const Text("Go sub home"),
             //   ),

@@ -8,9 +8,9 @@ class AppIconUrl {
   static final String iconAppPng = "$baseUrl/logo.png";
 
   // textfield
-  static final String iconPlace = "$baseUrl/place.svg";
+  static final String iconLocation = "$baseUrl/Location.svg";
 
-  static final String iconFilter = "$baseUrl/filter.svg";
+  static final String iconFilter = "$baseUrl/Filter.svg";
 
   // Các icon cho Bottom Navigation Bar
   static final String iconHome = "$baseUrl/Home.svg";

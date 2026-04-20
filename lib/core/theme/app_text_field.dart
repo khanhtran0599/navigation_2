@@ -40,9 +40,16 @@ class MyTextFieldPrimary extends StatelessWidget {
       ),
       child: TextField(
         decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 16),
           hintText: hinText,
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
+          prefix: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: prefixIcon,
+            ),
+          ),
+          suffix: suffixIcon,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,

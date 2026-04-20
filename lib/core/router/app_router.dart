@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:navigation_2/feature/chat/my_chat_page.dart';
 import 'package:navigation_2/feature/home/my_home_page.dart';
-import 'package:navigation_2/feature/home/sub_page/my_sub_home_page.dart';
+import 'package:navigation_2/feature/home/pages/my_list_place_dogwalk_page%20copy.dart';
+import 'package:navigation_2/feature/home/pages/my_place_dogwalk_detail_page.dart';
+import 'package:navigation_2/feature/home/widgets/item_place_widget.dart';
 import 'package:navigation_2/feature/moment/my_moment_page.dart';
 import 'package:navigation_2/feature/profile/my_profile_page.dart';
 import 'package:navigation_2/feature/profile/sub_page/my_setting_page.dart';
@@ -28,8 +30,22 @@ final appRouter = GoRouter(
               builder: (context, state) => MyHomePage(),
               routes: [
                 GoRoute(
-                  path: "subHome",
-                  builder: (context, state) => MySubHomePage(),
+                  path: "myListPlace",
+                  builder: (context, state) {
+                    var title = state.uri.queryParameters["title"];
+                    var listPlace = state.extra as List<PlaceDogWalk>;
+                    return MyListPlaceDogWalkPage(
+                      title: title,
+                      listPlace: listPlace,
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: "myDetail/:id",
+                  builder: (context, state) {
+                    var id = state.pathParameters["id"];
+                    return MyPlaceDogWalkDetailPage(id: id ?? "0");
+                  },
                 ),
               ],
             ),
