@@ -1,5 +1,7 @@
 import 'package:navigation_2/feature/home/domain/entities/place_dog_walk_entity.dart';
 
+/// [PlaceDogWalkModel] là lớp Model kế thừa từ [PlaceDogWalkEntity].
+/// Chịu trách nhiệm chuyển đổi dữ liệu giữa dạng JSON (từ API/Local) và Object trong Dart.
 class PlaceDogWalkModel extends PlaceDogWalkEntity {
   PlaceDogWalkModel({
     required super.imageUrl,
@@ -9,6 +11,7 @@ class PlaceDogWalkModel extends PlaceDogWalkEntity {
     required super.id,
   });
 
+  /// Tạo một bản sao của đối tượng với các giá trị thay đổi tùy chọn.
   PlaceDogWalkModel copyWith({
     String? imageUrl,
     String? address,
@@ -25,16 +28,18 @@ class PlaceDogWalkModel extends PlaceDogWalkEntity {
     );
   }
 
+  /// Chuyển đổi từ dữ liệu Map (JSON) sang đối tượng [PlaceDogWalkModel].
   factory PlaceDogWalkModel.fromJson(Map<String, dynamic> json) {
     return PlaceDogWalkModel(
       imageUrl: json["imageUrl"],
       address: json["address"],
-      distance: json["distance"],
+      distance: (json["distance"] as num).toDouble(), // Đảm bảo kiểu dữ liệu double
       pricePerHour: json["pricePerHour"],
       id: json["id"],
     );
   }
 
+  /// Chuyển đổi đối tượng [PlaceDogWalkModel] sang dạng Map (JSON).
   Map<String, dynamic> toJson() => {
     "imageUrl": imageUrl,
     "address": address,

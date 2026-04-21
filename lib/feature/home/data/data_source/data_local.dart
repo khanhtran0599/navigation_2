@@ -1,5 +1,7 @@
 import 'package:navigation_2/feature/home/data/model/place_dog_walk_model.dart';
 
+/// [jsonPlaceDogWalk] là danh sách dữ liệu mẫu (mock data) dưới dạng JSON.
+/// Chứa thông tin về các địa điểm dắt chó đi dạo.
 var jsonPlaceDogWalk = [
   {
     "id": "1",
@@ -43,11 +45,15 @@ var jsonPlaceDogWalk = [
   },
 ];
 
+/// [PlaceDogWalkDataLocalSource] chịu trách nhiệm lấy dữ liệu từ nguồn cục bộ (trong trường hợp này là biến static).
 class PlaceDogWalkDataLocalSource {
+  /// Lấy danh sách các địa điểm dắt chó đi dạo.
+  /// Giả lập thời gian chờ (latency) 5 giây để mô phỏng việc gọi API.
   Future<List<PlaceDogWalkModel>> getPlaceDogWalks() async {
     List<PlaceDogWalkModel> listPlace = [];
 
     await Future.delayed(Duration(seconds: 5), () {
+      // Chuyển đổi dữ liệu từ Map (JSON) sang Object (Model)
       listPlace = jsonPlaceDogWalk
           .map((json) => PlaceDogWalkModel.fromJson(json))
           .toList();

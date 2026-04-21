@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// [MyMomentPage] hiển thị các khoảnh khắc, bài đăng của người dùng và bạn bè.
+/// Đây là một nhánh chính trong Bottom Navigation Bar để xem các tin đăng mới nhất.
 class MyMomentPage extends StatefulWidget {
   const MyMomentPage({super.key});
 

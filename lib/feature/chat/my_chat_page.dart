@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// [MyChatPage] quản lý các cuộc hội thoại và tin nhắn.
+/// [MyChatPage] hiển thị danh sách các cuộc hội thoại và tin nhắn của người dùng.
+/// Đây là một nhánh chính trong Bottom Navigation Bar.
 class MyChatPage extends StatefulWidget {
+
   const MyChatPage({super.key});
 
   @override

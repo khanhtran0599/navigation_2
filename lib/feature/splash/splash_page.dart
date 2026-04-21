@@ -16,10 +16,10 @@ class MySplashPage extends StatefulWidget {
 class _MySplashPageState extends State<MySplashPage> {
   @override
   void initState() {
-    // Giả lập quá trình tải dữ liệu hoặc kiểm tra trang thái đăng nhập
+    // Giả lập quá trình tải dữ liệu hoặc kiểm tra trạng thái đăng nhập (ví dụ: token, session)
     Future.delayed(const Duration(seconds: 3), () {
       // Sau 3 giây, điều hướng sang màn hình Home
-      // Sử dụng context.go để thay thế toàn bộ stack điều hướng
+      // Sử dụng context.go để thay thế hoàn toàn stack hiện tại, tránh người dùng quay lại màn hình splash
       if (mounted) {
         context.go("/home");
       }
@@ -31,11 +31,12 @@ class _MySplashPageState extends State<MySplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Đảm bảo nền trắng sạch sẽ cho splash
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Hiển thị logo ứng dụng
+            // Hiển thị logo ứng dụng kết hợp cả PNG (icon) và SVG (text logo)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,8 +48,8 @@ class _MySplashPageState extends State<MySplashPage> {
               ],
             ),
             const SizedBox(height: 20),
-            // Tên hoặc slogan của ứng dụng
-            Text("Splash screen", style: AppTextStyles.h1_bold),
+            // Thông điệp chào mừng hoặc tên ứng dụng
+            Text("Chào mừng bạn!", style: AppTextStyles.h1_bold),
           ],
         ),
       ),

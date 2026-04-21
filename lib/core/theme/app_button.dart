@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
 
+/// [MyButtonWithIcon] là Button kết hợp với Icon.
+/// Hiện tại đang để trống để người dùng tự triển khai.
 class MyButtonWithIcon extends StatelessWidget {
   const MyButtonWithIcon({super.key});
 
@@ -10,12 +12,21 @@ class MyButtonWithIcon extends StatelessWidget {
   }
 }
 
+/// [MyButtonPrimary] là nút bấm chính với màu nền Gradient thương hiệu.
 class MyButtonPrimary extends StatelessWidget {
+  /// Nội dung hiển thị trên nút
   final String title;
+
+  /// Icon hiển thị bên cạnh chữ
   final Widget? icon;
+
+  /// Nếu true, nút sẽ chiếm toàn bộ chiều ngang khả dụng
   final bool isFullWidth;
 
+  /// Khoảng đệm ngang bên trong nút
   final double? paddingHorizontal;
+
+  /// Hàm callback khi nhấn nút
   final VoidCallback onPress;
 
   const MyButtonPrimary({
@@ -32,6 +43,7 @@ class MyButtonPrimary extends StatelessWidget {
     return Container(
       width: isFullWidth ? double.infinity : null,
       decoration: BoxDecoration(
+        // Màu Gradient đặc trưng của app
         gradient: LinearGradient(
           colors: [AppColors.secondary, AppColors.primary],
         ),
@@ -43,7 +55,7 @@ class MyButtonPrimary extends StatelessWidget {
         label: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
         style: ElevatedButton.styleFrom(
           foregroundColor: AppColors.white,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent, // Làm trong suốt để thấy Gradient của Container
           shadowColor: Colors.transparent,
           padding: EdgeInsets.symmetric(horizontal: paddingHorizontal ?? 12),
           shape: RoundedRectangleBorder(
@@ -55,6 +67,8 @@ class MyButtonPrimary extends StatelessWidget {
   }
 }
 
+/// [MyButtonOutline] là nút bấm có viền.
+/// Hiện tại đang để trống để người dùng tự triển khai.
 class MyButtonOutline extends StatelessWidget {
   const MyButtonOutline({super.key});
 
@@ -64,10 +78,10 @@ class MyButtonOutline extends StatelessWidget {
   }
 }
 
+/// [MyButtonBase] là nút bấm cơ bản với màu nền tối (Base color).
 class MyButtonBase extends StatelessWidget {
   final String title;
   final double fontSize;
-
   final double paddingHorizontal;
   final Widget? icon;
   final bool isFullWidth;
@@ -87,16 +101,14 @@ class MyButtonBase extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: isFullWidth ? double.infinity : null,
-
       decoration: BoxDecoration(
         color: AppColors.base,
         borderRadius: BorderRadius.circular(14),
       ),
       child: ElevatedButton.icon(
-        iconAlignment: IconAlignment.end,
+        iconAlignment: IconAlignment.end, // Đặt icon ở cuối text
         icon: icon,
         onPressed: onPress,
-
         label: Text(
           title,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
@@ -115,11 +127,13 @@ class MyButtonBase extends StatelessWidget {
   }
 }
 
+/// [MyButtonGrey] là nút bấm có màu xám, thường dùng cho các tác vụ phụ hoặc trạng thái vô hiệu hóa nhẹ.
 class MyButtonGrey extends StatelessWidget {
   final String title;
   final Widget? icon;
   final bool isFullWidth;
   final VoidCallback onPress;
+
   const MyButtonGrey({
     super.key,
     required this.title,
@@ -132,7 +146,6 @@ class MyButtonGrey extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: isFullWidth ? double.infinity : null,
-
       decoration: BoxDecoration(
         color: AppColors.lightGreyA1,
         borderRadius: BorderRadius.circular(14),

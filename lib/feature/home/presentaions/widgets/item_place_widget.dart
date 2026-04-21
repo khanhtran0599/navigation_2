@@ -9,9 +9,15 @@ import 'package:navigation_2/feature/home/domain/entities/place_dog_walk_entity.
 
 
 
+/// [PlaceItemWidget] hiển thị thông tin tóm tắt của một địa điểm dắt chó đi dạo.
+/// Bao gồm hình ảnh, địa chỉ, khoảng cách và giá cả.
 class PlaceItemWidget extends StatelessWidget {
+  /// Thực thể chứa dữ liệu của địa điểm
   final PlaceDogWalkEntity placeDogWalk;
+
+  /// Sự kiện xảy ra khi người dùng nhấn vào widget này
   final VoidCallback onTap;
+
   const PlaceItemWidget({
     super.key,
     required this.placeDogWalk,
@@ -27,6 +33,7 @@ class PlaceItemWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Hiển thị hình ảnh địa điểm với bo góc
             ClipRRect(
               borderRadius: BorderRadiusGeometry.circular(14),
               child: Image.network(
@@ -43,6 +50,7 @@ class PlaceItemWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Hiển thị địa chỉ (rút gọn nếu quá dài)
                       Text(
                         placeDogWalk.address,
                         overflow: TextOverflow.ellipsis,
@@ -51,6 +59,7 @@ class PlaceItemWidget extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      // Hiển thị khoảng cách kèm icon
                       Row(
                         children: [
                           SvgPicture.asset(AppIconUrl.iconLocation, height: 16),
@@ -67,6 +76,7 @@ class PlaceItemWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
+                // Nút hiển thị giá thuê theo giờ
                 SizedBox(
                   height: 24,
                   width: 40,
