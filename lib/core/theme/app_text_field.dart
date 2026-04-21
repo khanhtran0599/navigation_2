@@ -23,16 +23,9 @@ class MyTextFieldPassword extends StatelessWidget {
   }
 }
 
-/// [MyTextFieldPrimary] là TextField chủ đạo được sử dụng trong ứng dụng.
-/// Có nền xám nhạt, bo góc và hỗ trợ prefix/suffix icon.
 class MyTextFieldPrimary extends StatelessWidget {
-  /// Icon hiển thị ở đầu TextField
   final Widget? prefixIcon;
-
-  /// Icon hiển thị ở cuối TextField
   final Widget? suffixIcon;
-
-  /// Văn bản gợi ý khi TextField trống
   final String? hinText;
 
   const MyTextFieldPrimary({
@@ -44,29 +37,48 @@ class MyTextFieldPrimary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.lightGreyF0,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: 16),
-          hintText: hinText,
-          // Cấu hình prefix icon với padding hợp lý
-          prefix: Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: prefixIcon,
-            ),
-          ),
-          suffix: suffixIcon,
-          // Loại bỏ viền mặc định vì đã sử dụng Container để đổ nền
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
+    return TextField(
+      // Căn chỉnh văn bản nhập vào theo chiều dọc cho chuẩn với icon
+      textAlignVertical: TextAlignVertical.center,
+      decoration: InputDecoration(
+        hintText: hinText,
+        hintStyle: const TextStyle(color: Colors.grey),
+        filled: true,
+        fillColor: AppColors.lightGreyF0, // Màu xám nhạt của bạn
+        // Sử dụng prefixIcon để icon luôn căn giữa chuẩn xác
+        prefixIcon: prefixIcon != null
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: prefixIcon,
+              )
+            : null,
+
+        // Giới hạn kích thước để prefixIcon không chiếm quá nhiều chỗ
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
+        ),
+
+        suffixIcon: suffixIcon != null
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: suffixIcon,
+              )
+            : null,
+
+        suffixIconConstraints: const BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
+        ),
+
+        // Bo góc và bỏ viền
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
         ),
       ),
     );
