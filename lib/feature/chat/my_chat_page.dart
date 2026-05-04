@@ -17,32 +17,42 @@ class MyChatPage extends StatefulWidget {
 }
 
 class _MyChatPageState extends State<MyChatPage> {
+  /// Trạng thái loading khi đang gọi API
   bool isLoading = false;
 
+  /// Danh sách người dùng lấy được từ API
   List<UserEntity> users = [];
 
+  /// Use case xử lý logic lấy danh sách người dùng
   late GetUsersUseCase usersUseCase;
 
+  /// Thông báo lỗi nếu gọi API thất bại
   String errorMessage = '';
 
   @override
   void initState() {
+    // Khởi tạo Dio client
     final dio = DioClient.init();
 
+    // Khởi tạo Remote Source
     final getUserRemoteSource = GetUserRemoteSource(dio: dio);
 
+    // Khởi tạo Repository
     final getUserRepository = GetUserRepositoryImpl(
       getUserRemoteSource: getUserRemoteSource,
     );
 
+    // Khởi tạo Use Case
     usersUseCase = GetUsersUseCase(getUserRepository: getUserRepository);
 
-    // gọi data
+    // Bắt đầu gọi API lấy dữ liệu người dùng
     getUser();
 
     super.initState();
   }
 
+  /// Hàm thực thi gọi use case để lấy danh sách người dùng từ API.
+  /// Sẽ cập nhật trạng thái [isLoading] và gán kết quả vào danh sách [users] hoặc hiển thị [errorMessage].
   Future<void> getUser() async {
     setState(() {
       isLoading = true;
