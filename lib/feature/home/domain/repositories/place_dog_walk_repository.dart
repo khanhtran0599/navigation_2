@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:navigation_2/feature/home/domain/entities/place_dog_walk_entity.dart';
 
 /// [PlaceDogWalkRepository] là một interface (lớp trừu tượng) định nghĩa các phương thức
