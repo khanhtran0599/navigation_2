@@ -1,9 +1,9 @@
 
-import 'package:navigation_2/feature/chat/data/model/user_model.dart';
+import 'package:navigation_2/feature/moment/data/model/post_model.dart';
 
-/// [jsonUser] là danh sách dữ liệu mẫu (mock data) dưới dạng JSON.
-/// Chứa thông tin về các địa điểm dắt chó đi dạo.
-var jsonUser = [
+/// [jsonPost] là danh sách dữ liệu mẫu (mock data) dưới dạng JSON.
+/// Có thể dùng để hiển thị ảnh hoặc thông tin bài đăng giả lập.
+var jsonPost = [
   {
     "id": "1",
     "imageUrl":
@@ -34,18 +34,18 @@ var jsonUser = [
   },
 ];
 
-/// [UserDataLocalSource] chịu trách nhiệm lấy dữ liệu từ nguồn cục bộ (trong trường hợp này là biến static).
-class UserDataLocalSource {
-  /// Lấy danh sách các địa điểm dắt chó đi dạo.
+/// [PostDataLocalSource] chịu trách nhiệm lấy dữ liệu bài đăng từ nguồn cục bộ.
+class PostDataLocalSource {
+  /// Lấy danh sách các bài đăng.
   /// Giả lập thời gian chờ (latency) 5 giây để mô phỏng việc gọi API.
-  Future<List<UserModel>> getPlaceDogWalks() async {
-    List<UserModel> listPlace = [];
+  Future<List<PostModel>> getPost() async {
+    List<PostModel> posts = [];
 
     await Future.delayed(Duration(seconds: 5), () {
       // Chuyển đổi dữ liệu từ Map (JSON) sang Object (Model)
-      listPlace = jsonUser.map((json) => UserModel.fromJson(json)).toList();
+      //posts = jsonPost.map((json) => PostModel.fromJson(json)).toList();
     });
 
-    return listPlace;
+    return posts;
   }
 }

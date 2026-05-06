@@ -1,26 +1,26 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dio/dio.dart';
-import 'package:navigation_2/feature/chat/data/model/user_model.dart';
-import 'package:navigation_2/feature/chat/domain/usecases/update_user_usecase.dart';
+import 'package:navigation_2/core/usecase/usecase.dart';
+import 'package:navigation_2/feature/moment/data/model/post_model.dart';
 
-/// [GetUserRemoteSource] chịu trách nhiệm lấy dữ liệu người dùng từ API thông qua giao thức HTTP (Dio).
-class GetUserRemoteSource {
+/// [GetPostRemoteSource] chịu trách nhiệm lấy dữ liệu bài đăng từ API thông qua giao thức HTTP (Dio).
+class GetPostRemoteSource {
   /// Đối tượng [Dio] để thực hiện các HTTP requests
   final Dio dio;
   
   /// Khởi tạo với đối tượng [Dio]
-  GetUserRemoteSource({required this.dio});
+  GetPostRemoteSource({required this.dio});
 
-  /// Hàm lấy danh sách người dùng từ endpoint `/users`.
-  /// Trả về danh sách [UserModel] nếu HTTP response trả về mã 200.
+  /// Hàm lấy danh sách bài đăng từ endpoint `/posts` (ví dụ jsonplaceholder).
+  /// Trả về danh sách [PostModel] nếu HTTP response trả về mã 200.
   /// Bắn ra lỗi (Exception) nếu API có lỗi.
-  Future<List<UserModel>> getUsers() async {
+  Future<List<PostModel>> getPosts() async {
     try {
-      Response response = await dio.get("/users");
+      Response response = await dio.get("/posts");
 
       // ======= Update ======
       // Response response = await dio.put(
-      //   "/posts/id",
+      //   "/posts/1",
       //   data: {'title': 'foo', 'body': 'bar', 'userId': 1},
       // );
 
@@ -32,7 +32,7 @@ class GetUserRemoteSource {
 
       if (response.statusCode == 200) {
         List<dynamic> reponseData = response.data;
-        return reponseData.map((json) => UserModel.fromJson(json)).toList();
+        return reponseData.map((json) => PostModel.fromJson(json)).toList();
       } else {
         throw Exception(response.statusMessage);
       }
@@ -42,29 +42,32 @@ class GetUserRemoteSource {
   }
 }
 
-/// [UpdateUserRemoteSource] chịu trách nhiệm gửi request cập nhật thông tin người dùng lên API.
-class UpdateUserRemoteSource {
+
+
+
+
+/// [UpdatePostRemoteSource] chịu trách nhiệm gửi request cập nhật thông tin bài đăng lên API.
+class UpdatePostRemoteSource {
   /// Đối tượng [Dio] để thực hiện các HTTP requests
   final Dio dio;
   
   /// Khởi tạo với đối tượng [Dio]
-  UpdateUserRemoteSource({required this.dio});
+  UpdatePostRemoteSource({required this.dio});
 
-  /// Gửi dữ liệu người dùng mới qua method PUT đến `/users/{id}`.
-  /// Trả về [UserModel] vừa cập nhật nếu thành công (mã 200).
+  /// Gửi dữ liệu bài đăng mới qua method PUT đến `/posts/{id}`.
+  /// Trả về [PostModel] vừa cập nhật nếu thành công (mã 200).
   /// Bắn ra lỗi (Exception) nếu API có lỗi.
-  Future<UserModel> getUsers(UserParam user) async {
+  Future<PostModel> getPosts(NoParam Post) async {
     try {
       Response response = await dio.put(
-        "/users/${user.id}",
-        data: UserModel(
-          id: user.userEntity.id,
-          name: user.userEntity.name,
-        ).toJson(),
+        "/Posts/${Post}",
+        // data: PostModel(userId: "null", id: null, title: '', body: ''
+         
+        // ).toJson(),
       );
       if (response.statusCode == 200) {
         final reponseData = response.data;
-        return UserModel.fromJson(reponseData);
+        return PostModel.fromJson(reponseData);
       } else {
         throw Exception(response.statusMessage);
       }
