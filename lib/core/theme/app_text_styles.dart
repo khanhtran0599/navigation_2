@@ -21,6 +21,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  static final TextStyle body = TextStyle(
+    color: AppColors.base,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle coppyWidth({
     Color? color,
     double? fontSize,
