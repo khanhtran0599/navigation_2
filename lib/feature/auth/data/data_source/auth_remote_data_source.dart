@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:navigation_2/feature/auth/data/model/user_model.dart';
 
@@ -5,7 +6,7 @@ import 'package:navigation_2/feature/auth/data/model/user_model.dart';
 /// Nó tách biệt phần kết nối thật (ví dụ HTTP Client, Firebase) khỏi phần logic Repository.
 abstract class AuthRemoteDataSource {
   Future<UserModel> signIn(String email, String password);
-  Future<UserModel> signUp(String email, String password);
+  Future<UserModel> signUp(String email, String password, String name);
   Future<void> signOut();
   Future<UserModel?> getCurrentUser();
 }
@@ -14,6 +15,7 @@ abstract class AuthRemoteDataSource {
 /// Ở đây gọi các API của Firebase trực tiếp và ném lỗi (throw Exception) nếu API trả về lỗi.
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   AuthRemoteDataSourceImpl({required this.firebaseAuth});
 
@@ -31,15 +33,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  /// Gửi yêu cầu tạo tài khoản mới lên Firebase.
+  /// Gửi yêu cầu tạo tài khoản mới lên Firebase và lưu thông tin vào Firestore.
   @override
-  Future<UserModel> signUp(String email, String password) async {
+  Future<UserModel> signUp(String email, String password, String name) async {
     final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    
     if (userCredential.user != null) {
-      return UserModel.fromFirebaseUser(userCredential.user!);
+      final user = userCredential.user!;
+      
+      // Cập nhật Profile (DisplayName) trên Firebase Auth
+      await user.updateDisplayName(name);
+      
+      // Lưu thông tin người dùng vào Firestore
+      await firestore.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'email': email,
+        'name': name,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      
+      return UserModel(
+        id: user.uid,
+        email: email,
+        name: name,
+      );
     } else {
       throw Exception('Sign up failed');
     }

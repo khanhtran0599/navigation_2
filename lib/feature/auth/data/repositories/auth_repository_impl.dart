@@ -27,11 +27,11 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  /// Chuyển tiếp lệnh Đăng ký. Trả về [Right] (UserModel) hoặc [Left] (ServerFalure).
+  /// Đăng ký tài khoản mới. Trả về [UserEntity] nếu thành công.
   @override
-  Future<Either<Failure, UserEntity>> signUp(String email, String password) async {
+  Future<Either<Failure, UserEntity>> signUp(String email, String password, String name) async {
     try {
-      final userModel = await remoteDataSource.signUp(email, password);
+      final userModel = await remoteDataSource.signUp(email, password, name);
       return Right(userModel);
     } on FirebaseAuthException catch (e) {
       return Left(ServerFalure(e.message ?? 'Authentication error'));

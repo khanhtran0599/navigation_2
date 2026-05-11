@@ -12,7 +12,7 @@ abstract class AuthRepository {
   Future<Either<Failure, UserEntity>> signIn(String email, String password);
   
   /// Đăng ký tài khoản mới. Trả về [UserEntity] nếu thành công.
-  Future<Either<Failure, UserEntity>> signUp(String email, String password);
+  Future<Either<Failure, UserEntity>> signUp(String email, String password, String name);
   
   /// Đăng xuất khỏi hệ thống.
   Future<Either<Failure, void>> signOut();

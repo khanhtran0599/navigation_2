@@ -12,21 +12,14 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<RegisterSubmitted>(_onRegisterSubmitted);
   }
 
-  /// Xử lý sự kiện [RegisterSubmitted] do người dùng kích hoạt.
   Future<void> _onRegisterSubmitted(RegisterSubmitted event, Emitter<RegisterState> emit) async {
-    // 1. Chuyển sang trạng thái Loading (để UI vô hiệu hóa nút bấm và hiện vòng xoay).
     emit(RegisterLoading());
-    
-    // 2. Gọi Usecase xử lý logic Đăng ký tài khoản mới.
-    final result = await signUpUseCase(SignUpParams(
-      email: event.email,
-      password: event.password,
-    ));
-
-    // 3. Emit kết quả: Lỗi thì báo lỗi, thành công thì emit RegisterSuccess.
+    final result = await signUpUseCase(
+      SignUpParams(email: event.email, password: event.password, name: event.name),
+    );
     result.fold(
       (failure) => emit(RegisterFailure(error: failure.message)),
-      (user) => emit(RegisterSuccess()),
+      (user) => emit(RegisterSuccess(user: user)),
     );
   }
 }

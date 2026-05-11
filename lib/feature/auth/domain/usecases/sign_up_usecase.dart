@@ -11,7 +11,7 @@ class SignUpUseCase {
 
   /// Nhận [SignUpParams] và gọi hàm đăng ký từ [AuthRepository].
   Future<Either<Failure, UserEntity>> call(SignUpParams params) {
-    return repository.signUp(params.email, params.password);
+    return repository.signUp(params.email, params.password, params.name);
   }
 }
 
@@ -19,6 +19,7 @@ class SignUpUseCase {
 class SignUpParams {
   final String email;
   final String password;
+  final String name;
 
-  SignUpParams({required this.email, required this.password});
+  SignUpParams({required this.email, required this.password, required this.name});
 }
