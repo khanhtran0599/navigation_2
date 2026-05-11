@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:navigation_2/feature/chat/my_chat_page.dart';
 import 'package:navigation_2/feature/home/domain/entities/place_dog_walk_entity.dart';
 import 'package:navigation_2/feature/home/my_home_page.dart';
-import 'package:navigation_2/feature/home/presentaions/pages/my_list_place_dogwalk_page%20copy.dart';
+import 'package:navigation_2/feature/home/presentaions/pages/my_list_place_dogwalk_page.dart';
 import 'package:navigation_2/feature/home/presentaions/pages/my_place_dogwalk_detail_page.dart';
 import 'package:navigation_2/feature/moment/my_moment_page.dart';
 import 'package:navigation_2/feature/moment/presentaions/pages/detail_post_page.dart';
@@ -15,7 +14,7 @@ import 'package:navigation_2/main.dart';
 /// Cấu hình điều hướng (Router) cho toàn bộ ứng dụng sử dụng gói [go_router].
 final appRouter = GoRouter(
   initialLocation: "/splash",
-  redirect: (context, state) {},
+  redirect: (context, state) => null,
   routes: <RouteBase>[
     // splash screen
     GoRoute(path: "/splash", builder: (context, state) => MySplashPage()),

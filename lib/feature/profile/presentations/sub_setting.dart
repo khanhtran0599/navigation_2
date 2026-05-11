@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:navigation_2/core/theme/app_text_styles.dart';
 
-
 class MySettingPage extends StatefulWidget {
   const MySettingPage({super.key});
 
@@ -18,10 +17,8 @@ class _MySettingPageState extends State<MySettingPage> {
       ),
       body: Center(
         child: TextButton(
-          onPressed: () {
-          
-          },
-          child: Text("Setting Page", style: AppTextStyles.h1_bold),
+          onPressed: () {},
+          child: Text("Setting Page", style: AppTextStyles.h1Bold),
         ),
       ),
     );

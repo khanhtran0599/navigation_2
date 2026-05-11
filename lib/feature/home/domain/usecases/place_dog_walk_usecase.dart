@@ -9,7 +9,6 @@ class PlaceDogWalkUsecase {
 
   PlaceDogWalkUsecase({required this.placeDogWalkRepository});
 
-  @override
   Future<List<PlaceDogWalkEntity>> getPlaceDogWalks() async {
     return placeDogWalkRepository.getPlaceDogWalks();
   }

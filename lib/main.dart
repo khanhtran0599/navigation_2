@@ -66,7 +66,7 @@ class MyRootPage extends StatelessWidget {
             label: "Home",
             selectedIcon: SvgPicture.asset(
               AppIconUrl.iconHome,
-              color: AppColors.base,
+              colorFilter:  ColorFilter.mode(AppColors.base, BlendMode.srcIn),
             ),
           ),
           NavigationDestination(
@@ -74,14 +74,14 @@ class MyRootPage extends StatelessWidget {
             label: "Moments",
             selectedIcon: SvgPicture.asset(
               AppIconUrl.iconUser,
-              color: AppColors.base,
+              colorFilter:  ColorFilter.mode(AppColors.base, BlendMode.srcIn),
             ),
           ),
           NavigationDestination(
             icon: SvgPicture.asset(AppIconUrl.iconSend),
             selectedIcon: SvgPicture.asset(
               AppIconUrl.iconSend,
-              color: AppColors.base,
+              colorFilter:  ColorFilter.mode(AppColors.base, BlendMode.srcIn),
             ),
             label: "Chat",
           ),
@@ -89,7 +89,7 @@ class MyRootPage extends StatelessWidget {
             icon: SvgPicture.asset(AppIconUrl.iconProfile),
             selectedIcon: SvgPicture.asset(
               AppIconUrl.iconProfile,
-              color: AppColors.base,
+              colorFilter:  ColorFilter.mode(AppColors.base, BlendMode.srcIn),
             ),
             label: "Profile",
           ),

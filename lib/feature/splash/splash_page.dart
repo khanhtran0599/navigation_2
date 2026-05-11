@@ -49,7 +49,7 @@ class _MySplashPageState extends State<MySplashPage> {
             ),
             const SizedBox(height: 20),
             // Thông điệp chào mừng hoặc tên ứng dụng
-            Text("Chào mừng bạn!", style: AppTextStyles.h1_bold),
+            Text("Chào mừng bạn!", style: AppTextStyles.h1Bold),
           ],
         ),
       ),

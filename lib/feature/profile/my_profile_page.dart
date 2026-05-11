@@ -24,7 +24,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             // Điều hướng sâu vào trang cài đặt (sub-route của nhánh profile)
             context.go("/profile/setting");
           },
-          child: Text("Go Setting Page", style: AppTextStyles.h1_bold),
+          child: Text("Go Setting Page", style: AppTextStyles.h1Bold),
         ),
       ),
     );

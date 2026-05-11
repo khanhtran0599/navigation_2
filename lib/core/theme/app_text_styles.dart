@@ -9,7 +9,7 @@ class AppTextStyles {
   static final TextStyle h1 = TextStyle(color: AppColors.base, fontSize: 24);
 
   // Kiểu chữ tiêu đề chính (Bold)
-  static final TextStyle h1_bold = TextStyle(
+  static final TextStyle h1Bold = TextStyle(
     color: AppColors.base,
     fontSize: 24,
     fontWeight: FontWeight.bold,

@@ -55,10 +55,10 @@ class UpdatePostRemoteSource {
   /// Gửi dữ liệu bài đăng mới qua method PUT đến `/posts/{id}`.
   /// Trả về [PostModel] vừa cập nhật nếu thành công (mã 200).
   /// Bắn ra lỗi (Exception) nếu API có lỗi.
-  Future<PostModel> getPosts(NoParam Post) async {
+  Future<PostModel> getPosts(NoParam post) async {
     try {
       Response response = await dio.put(
-        "/Posts/${Post}",
+        "/Posts/$post",
         // data: PostModel(userId: "null", id: null, title: '', body: ''
 
         // ).toJson(),
