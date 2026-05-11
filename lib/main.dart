@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:navigation_2/core/constants/icon_asset_url.dart';
 import 'package:navigation_2/core/router/app_router.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
