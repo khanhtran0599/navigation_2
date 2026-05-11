@@ -10,14 +10,92 @@ import 'package:navigation_2/feature/profile/my_profile_page.dart';
 import 'package:navigation_2/feature/profile/presentations/sub_setting.dart';
 import 'package:navigation_2/feature/splash/splash_page.dart';
 import 'package:navigation_2/main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:navigation_2/feature/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:navigation_2/feature/auth/data/repositories/auth_repository_impl.dart';
+import 'package:navigation_2/feature/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:navigation_2/feature/auth/domain/usecases/sign_up_usecase.dart';
+import 'package:navigation_2/feature/auth/presentaions/bloc/login/login_bloc.dart';
+import 'package:navigation_2/feature/auth/presentaions/bloc/register/register_bloc.dart';
+import 'package:navigation_2/feature/auth/presentaions/pages/login_page.dart';
+import 'package:navigation_2/feature/auth/presentaions/pages/register_page.dart';
+import 'package:navigation_2/feature/auth/presentaions/bloc/auth/auth_bloc.dart';
+import 'package:navigation_2/feature/auth/presentaions/bloc/auth/auth_state.dart';
 
 /// Cấu hình điều hướng (Router) cho toàn bộ ứng dụng sử dụng gói [go_router].
+/// Quản lý việc chuyển trang, phân nhánh (Bottom Navigation) và kiểm soát truy cập (Auth Guard).
 final appRouter = GoRouter(
+  /// Đường dẫn mặc định khi ứng dụng vừa khởi động.
   initialLocation: "/splash",
-  redirect: (context, state) => null,
+
+  /// [redirect] là cơ chế Auth Guard (Bảo vệ Route).
+  /// Hàm này được gọi mỗi khi có sự thay đổi về Route hoặc trạng thái AuthBloc (nếu có listen).
+  /// Nhiệm vụ: Đảm bảo người dùng chưa đăng nhập không thể vào app, 
+  /// và người đã đăng nhập không bị kẹt ở màn hình Login/Splash.
+  redirect: (context, state) {
+    // Đọc trạng thái hiện tại của AuthBloc
+    final authState = context.read<AuthBloc>().state;
+    
+    // Kiểm tra xem người dùng có đang điều hướng tới màn hình Auth (Login/Register) hay Splash không
+    final isGoingToAuth = state.matchedLocation == '/login' || state.matchedLocation == '/register';
+    final isGoingToSplash = state.matchedLocation == '/splash';
+
+    if (authState is AuthInitial) {
+      // Trạng thái ban đầu: Đang kiểm tra session. Giữ nguyên ở Splash.
+      return null;
+    } else if (authState is Unauthenticated) {
+      // Trạng thái chưa đăng nhập: Nếu đang cố gắng vào các trang bên trong app (không phải Auth/Splash)
+      // thì sẽ bị bắt buộc chuyển hướng về trang /login.
+      if (!isGoingToAuth && !isGoingToSplash) {
+        return '/login';
+      }
+    } else if (authState is Authenticated) {
+      // Trạng thái đã đăng nhập: Nếu người dùng đang ở Splash hoặc cố vào lại trang Login
+      // thì sẽ tự động chuyển hướng thẳng vào /home.
+      if (isGoingToAuth || isGoingToSplash) {
+        return '/home';
+      }
+    }
+    
+    // Trả về null nghĩa là cho phép đi tiếp tới route được yêu cầu
+    return null;
+  },
   routes: <RouteBase>[
     // splash screen
     GoRoute(path: "/splash", builder: (context, state) => MySplashPage()),
+
+    GoRoute(
+      path: "/login",
+      builder: (context, state) => BlocProvider(
+        create: (context) => LoginBloc(
+          signInUseCase: SignInUseCase(
+            AuthRepositoryImpl(
+              remoteDataSource: AuthRemoteDataSourceImpl(
+                firebaseAuth: FirebaseAuth.instance,
+              ),
+            ),
+          ),
+        ),
+        child: const LoginPage(),
+      ),
+    ),
+
+    GoRoute(
+      path: "/register",
+      builder: (context, state) => BlocProvider(
+        create: (context) => RegisterBloc(
+          signUpUseCase: SignUpUseCase(
+            AuthRepositoryImpl(
+              remoteDataSource: AuthRemoteDataSourceImpl(
+                firebaseAuth: FirebaseAuth.instance,
+              ),
+            ),
+          ),
+        ),
+        child: const RegisterPage(),
+      ),
+    ),
 
     // Các nhánh chính khi đã vào được home
     StatefulShellRoute.indexedStack(

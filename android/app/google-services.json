@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "581690002106",
+    "project_id": "flutter-tutorial-2dc10",
+    "storage_bucket": "flutter-tutorial-2dc10.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581690002106:android:a04b0c391afd633ffad083",
+        "android_client_info": {
+          "package_name": "com.example.navigation_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt4PGMG_QZK-Ojsd1qGe9UsQf86VKpG58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
