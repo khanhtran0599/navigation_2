@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:navigation_2/core/error/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:navigation_2/feature/chat/data/data_source/chat_remote_data_source.dart';
@@ -23,5 +24,15 @@ class ChatRepositoryImpl implements ChatRepository {
   @override
   Stream<List<MessageEntity>> getMessages(String senderId, String receiverId) {
     return remoteDataSource.getMessages(senderId, receiverId);
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadImage(File file, String senderId) async {
+    try {
+      final url = await remoteDataSource.uploadImage(file, senderId);
+      return Right(url);
+    } catch (e) {
+      return Left(ServerFalure(e.toString()));
+    }
   }
 }

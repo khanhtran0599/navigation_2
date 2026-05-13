@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:navigation_2/core/di/service_locator.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
@@ -9,6 +11,7 @@ import 'package:navigation_2/feature/chat/domain/entities/message_entity.dart';
 import 'package:navigation_2/feature/chat/domain/entities/user_entity.dart';
 import 'package:navigation_2/feature/chat/domain/usecases/get_messages_usecase.dart';
 import 'package:navigation_2/feature/chat/domain/usecases/send_message_usecase.dart';
+import 'package:navigation_2/feature/chat/domain/usecases/upload_image_usecase.dart';
 
 class ChatDetailPage extends StatefulWidget {
   final UserEntity targetUser;
@@ -22,6 +25,8 @@ class ChatDetailPage extends StatefulWidget {
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final ImagePicker _picker = ImagePicker();
+  bool _isUploading = false;
 
   @override
   void dispose() {
@@ -30,19 +35,46 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     super.dispose();
   }
 
-  void _sendMessage(String senderId) {
-    if (_messageController.text.trim().isEmpty) return;
+  void _sendMessage(String senderId, {String? imageUrl}) {
+    if (_messageController.text.trim().isEmpty && imageUrl == null) return;
 
     final message = MessageEntity(
       id: '',
       senderId: senderId,
       receiverId: widget.targetUser.id.toString(),
       message: _messageController.text.trim(),
+      imageUrl: imageUrl,
       timestamp: DateTime.now(),
     );
 
     sl<SendMessageUseCase>().call(message);
     _messageController.clear();
+  }
+
+  Future<void> _pickAndSendImage(String senderId) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+    if (image == null) return;
+
+    setState(() {
+      _isUploading = true;
+    });
+
+    final result = await sl<UploadImageUseCase>().call(File(image.path), senderId);
+
+    result.fold(
+      (failure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Upload failed: ${failure.message}")),
+        );
+      },
+      (imageUrl) {
+        _sendMessage(senderId, imageUrl: imageUrl);
+      },
+    );
+
+    setState(() {
+      _isUploading = false;
+    });
   }
 
   @override
@@ -94,6 +126,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                           child: Container(
                             margin: const EdgeInsets.only(top: 8),
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width * 0.7,
+                            ),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                             decoration: BoxDecoration(
                               color: isMe ? AppColors.primary : Colors.grey.shade200,
@@ -102,12 +137,37 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                 bottomLeft: isMe ? const Radius.circular(20) : const Radius.circular(0),
                               ),
                             ),
-                            child: Text(
-                              msg.message,
-                              style: TextStyle(
-                                color: isMe ? Colors.white : Colors.black87,
-                                fontSize: 16,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (msg.imageUrl != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.network(
+                                        msg.imageUrl!,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return const SizedBox(
+                                            width: 200,
+                                            height: 200,
+                                            child: Center(child: CircularProgressIndicator()),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                if (msg.message.isNotEmpty)
+                                  Text(
+                                    msg.message,
+                                    style: TextStyle(
+                                      color: isMe ? Colors.white : Colors.black87,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                         ),
@@ -125,6 +185,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               },
             ),
           ),
+          if (_isUploading)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: LinearProgressIndicator(),
+            ),
           _buildMessageInput(currentUserId),
         ],
       ),
@@ -146,6 +211,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       ),
       child: Row(
         children: [
+          IconButton(
+            icon:  Icon(Icons.image, color: AppColors.primary),
+            onPressed: () => _pickAndSendImage(currentUserId),
+          ),
           Expanded(
             child: TextField(
               controller: _messageController,
@@ -170,7 +239,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 color: AppColors.primary,
                 shape: BoxShape.circle,
               ),
-              child:  Icon(Icons.send, color: Colors.white),
+              child: const Icon(Icons.send, color: Colors.white),
             ),
           ),
         ],

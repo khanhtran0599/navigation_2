@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:navigation_2/core/network/dio_client.dart';
@@ -28,6 +29,7 @@ import 'package:navigation_2/feature/chat/domain/repositories/chat_repository.da
 import 'package:navigation_2/feature/chat/data/repositories/chat_repository_impl.dart';
 import 'package:navigation_2/feature/chat/domain/usecases/send_message_usecase.dart';
 import 'package:navigation_2/feature/chat/domain/usecases/get_messages_usecase.dart';
+import 'package:navigation_2/feature/chat/domain/usecases/upload_image_usecase.dart';
 
 // Moment
 import 'package:navigation_2/feature/moment/data/data_source/data_remote.dart' as moment_remote;
@@ -52,6 +54,7 @@ Future<void> init() async {
   sl.registerLazySingleton<Dio>(() => DioClient.init());
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  sl.registerLazySingleton<FirebaseStorage>(() => FirebaseStorage.instance);
 
   // ===========================================================================
   // AUTH FEATURE
@@ -96,7 +99,7 @@ Future<void> init() async {
     () => chat_remote.GetUserRemoteSource(dio: sl()),
   );
   sl.registerLazySingleton<ChatRemoteDataSource>(
-    () => ChatRemoteDataSourceImpl(firestore: sl()),
+    () => ChatRemoteDataSourceImpl(firestore: sl(), storage: sl()),
   );
   sl.registerLazySingleton<GetUserRepository>(
     () => GetUserRepositoryImpl(remoteDataSource: sl()),
@@ -107,6 +110,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetUsersUseCase(getUserRepository: sl()));
   sl.registerLazySingleton(() => SendMessageUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetMessagesUseCase(repository: sl()));
+  sl.registerLazySingleton(() => UploadImageUseCase(repository: sl()));
 
   // ===========================================================================
   // MOMENT FEATURE

@@ -5,6 +5,7 @@ class MessageEntity extends Equatable {
   final String senderId;
   final String receiverId;
   final String message;
+  final String? imageUrl;
   final DateTime timestamp;
 
   const MessageEntity({
@@ -12,9 +13,10 @@ class MessageEntity extends Equatable {
     required this.senderId,
     required this.receiverId,
     required this.message,
+    this.imageUrl,
     required this.timestamp,
   });
 
   @override
-  List<Object?> get props => [id, senderId, receiverId, message, timestamp];
+  List<Object?> get props => [id, senderId, receiverId, message, imageUrl, timestamp];
 }

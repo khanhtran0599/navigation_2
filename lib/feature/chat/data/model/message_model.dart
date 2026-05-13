@@ -7,6 +7,7 @@ class MessageModel extends MessageEntity {
     required super.senderId,
     required super.receiverId,
     required super.message,
+    super.imageUrl,
     required super.timestamp,
   });
 
@@ -16,6 +17,7 @@ class MessageModel extends MessageEntity {
       senderId: json['senderId'] ?? '',
       receiverId: json['receiverId'] ?? '',
       message: json['message'] ?? '',
+      imageUrl: json['imageUrl'],
       timestamp: (json['timestamp'] as Timestamp).toDate(),
     );
   }
@@ -25,6 +27,7 @@ class MessageModel extends MessageEntity {
       'senderId': senderId,
       'receiverId': receiverId,
       'message': message,
+      'imageUrl': imageUrl,
       'timestamp': FieldValue.serverTimestamp(),
     };
   }
@@ -35,6 +38,7 @@ class MessageModel extends MessageEntity {
       senderId: entity.senderId,
       receiverId: entity.receiverId,
       message: entity.message,
+      imageUrl: entity.imageUrl,
       timestamp: entity.timestamp,
     );
   }
