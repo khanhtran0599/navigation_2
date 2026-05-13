@@ -52,29 +52,62 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   Future<void> _pickAndSendImage(String senderId) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+    );
     if (image == null) return;
+
+    if (!mounted) return;
 
     setState(() {
       _isUploading = true;
     });
 
-    final result = await sl<UploadImageUseCase>().call(File(image.path), senderId);
+    final result = await sl<UploadImageUseCase>().call(
+      File(image.path),
+      senderId,
+    );
+
+    if (!mounted) return;
 
     result.fold(
       (failure) {
+        String errorMessage = failure.message;
+        // Parse Firebase error codes
+        if (errorMessage.contains('1017') ||
+            errorMessage.contains('permission-denied')) {
+          errorMessage =
+              'Upload permission denied. Check Firebase Security Rules.';
+        } else if (errorMessage.contains('unauthenticated')) {
+          errorMessage = 'Please login to upload images.';
+        } else if (errorMessage.contains('offline')) {
+          errorMessage = 'No internet connection.';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Upload failed: ${failure.message}")),
+          SnackBar(
+            content: Text("Upload failed: $errorMessage"),
+            duration: const Duration(seconds: 4),
+          ),
         );
       },
       (imageUrl) {
         _sendMessage(senderId, imageUrl: imageUrl);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Image uploaded successfully"),
+            duration: Duration(seconds: 2),
+          ),
+        );
       },
     );
 
-    setState(() {
-      _isUploading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isUploading = false;
+      });
+    }
   }
 
   @override
@@ -97,7 +130,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         children: [
           Expanded(
             child: StreamBuilder<List<MessageEntity>>(
-              stream: sl<GetMessagesUseCase>().call(currentUserId, widget.targetUser.id.toString()),
+              stream: sl<GetMessagesUseCase>().call(
+                currentUserId,
+                widget.targetUser.id.toString(),
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -120,21 +156,34 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     final timeStr = DateFormat('HH:mm').format(msg.timestamp);
 
                     return Column(
-                      crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                      crossAxisAlignment: isMe
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
                         Align(
-                          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                          alignment: isMe
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
                           child: Container(
                             margin: const EdgeInsets.only(top: 8),
                             constraints: BoxConstraints(
                               maxWidth: MediaQuery.of(context).size.width * 0.7,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
                             decoration: BoxDecoration(
-                              color: isMe ? AppColors.primary : Colors.grey.shade200,
+                              color: isMe
+                                  ? AppColors.primary
+                                  : Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(20).copyWith(
-                                bottomRight: isMe ? const Radius.circular(0) : const Radius.circular(20),
-                                bottomLeft: isMe ? const Radius.circular(20) : const Radius.circular(0),
+                                bottomRight: isMe
+                                    ? const Radius.circular(0)
+                                    : const Radius.circular(20),
+                                bottomLeft: isMe
+                                    ? const Radius.circular(20)
+                                    : const Radius.circular(0),
                               ),
                             ),
                             child: Column(
@@ -148,14 +197,20 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                       child: Image.network(
                                         msg.imageUrl!,
                                         fit: BoxFit.cover,
-                                        loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null) return child;
-                                          return const SizedBox(
-                                            width: 200,
-                                            height: 200,
-                                            child: Center(child: CircularProgressIndicator()),
-                                          );
-                                        },
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return const SizedBox(
+                                                width: 200,
+                                                height: 200,
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              );
+                                            },
                                       ),
                                     ),
                                   ),
@@ -163,7 +218,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                   Text(
                                     msg.message,
                                     style: TextStyle(
-                                      color: isMe ? Colors.white : Colors.black87,
+                                      color: isMe
+                                          ? Colors.white
+                                          : Colors.black87,
                                       fontSize: 16,
                                     ),
                                   ),
@@ -172,10 +229,16 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
+                          ),
                           child: Text(
                             timeStr,
-                            style: const TextStyle(fontSize: 10, color: Colors.grey),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ],
@@ -203,7 +266,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             offset: const Offset(0, -1),
             blurRadius: 10,
           ),
@@ -212,7 +275,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       child: Row(
         children: [
           IconButton(
-            icon:  Icon(Icons.image, color: AppColors.primary),
+            icon: Icon(Icons.image, color: AppColors.primary),
             onPressed: () => _pickAndSendImage(currentUserId),
           ),
           Expanded(
@@ -226,7 +289,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 ),
                 filled: true,
                 fillColor: Colors.grey.shade100,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
               ),
             ),
           ),
@@ -235,7 +301,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
             onTap: () => _sendMessage(currentUserId),
             child: Container(
               padding: const EdgeInsets.all(12),
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.primary,
                 shape: BoxShape.circle,
               ),

@@ -121,7 +121,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Widget _buildGenderDropdown() {
     return DropdownButtonFormField<String>(
-      value: _selectedGender,
+      initialValue: _selectedGender,
       decoration: InputDecoration(
         labelText: "Gender",
         prefixIcon: Icon(Icons.wc, color: AppColors.primary),

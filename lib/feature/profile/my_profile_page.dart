@@ -50,7 +50,7 @@ class MyProfilePage extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.05),
+                            color: AppColors.primary.withValues(alpha:0.05),
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(32),
                               bottomRight: Radius.circular(32),
@@ -62,7 +62,7 @@ class MyProfilePage extends StatelessWidget {
                                 children: [
                                   CircleAvatar(
                                     radius: 60,
-                                    backgroundColor: AppColors.primary.withOpacity(0.1),
+                                    backgroundColor: AppColors.primary.withValues(alpha:0.1),
                                     child:  Icon(Icons.person, size: 60, color: AppColors.primary),
                                   ),
                                   PositionBag(
