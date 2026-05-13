@@ -23,6 +23,11 @@ import 'package:navigation_2/feature/chat/data/data_source/data_remote.dart' as 
 import 'package:navigation_2/feature/chat/data/repositories/get_user_repository_impl.dart';
 import 'package:navigation_2/feature/chat/domain/repositories/get_user_repository.dart';
 import 'package:navigation_2/feature/chat/domain/usecases/get_user_usecase.dart';
+import 'package:navigation_2/feature/chat/data/data_source/chat_remote_data_source.dart';
+import 'package:navigation_2/feature/chat/domain/repositories/chat_repository.dart';
+import 'package:navigation_2/feature/chat/data/repositories/chat_repository_impl.dart';
+import 'package:navigation_2/feature/chat/domain/usecases/send_message_usecase.dart';
+import 'package:navigation_2/feature/chat/domain/usecases/get_messages_usecase.dart';
 
 // Moment
 import 'package:navigation_2/feature/moment/data/data_source/data_remote.dart' as moment_remote;
@@ -86,14 +91,22 @@ Future<void> init() async {
   // ===========================================================================
   // CHAT FEATURE
   // Quản lý danh sách người dùng và tin nhắn
-  // ===========================================================================
+  // ===========================================================================  // Chat Feature
   sl.registerLazySingleton<chat_remote.GetUserRemoteSource>(
     () => chat_remote.GetUserRemoteSource(dio: sl()),
   );
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(firestore: sl()),
+  );
   sl.registerLazySingleton<GetUserRepository>(
-    () => GetUserRepositoryImpl(getUserRemoteSource: sl()),
+    () => GetUserRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(remoteDataSource: sl()),
   );
   sl.registerLazySingleton(() => GetUsersUseCase(getUserRepository: sl()));
+  sl.registerLazySingleton(() => SendMessageUseCase(repository: sl()));
+  sl.registerLazySingleton(() => GetMessagesUseCase(repository: sl()));
 
   // ===========================================================================
   // MOMENT FEATURE

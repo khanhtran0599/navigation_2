@@ -4,7 +4,7 @@
 /// Được sử dụng chủ yếu ở Domain Layer để giữ cho logic nghiệp vụ không bị phụ thuộc vào Data Layer.
 class UserEntity {
   /// ID định danh duy nhất của người dùng
-  final int id;
+  final String id;
 
   /// Tên hiển thị của người dùng
   final String name;

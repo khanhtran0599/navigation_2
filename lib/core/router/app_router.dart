@@ -12,7 +12,10 @@ import 'package:navigation_2/feature/profile/presentations/bloc/profile_bloc.dar
 import 'package:navigation_2/feature/profile/presentations/bloc/profile_event.dart';
 import 'package:navigation_2/feature/profile/presentations/pages/edit_profile_page.dart';
 import 'package:navigation_2/feature/profile/presentations/sub_setting.dart';
+import 'package:navigation_2/feature/chat/presentations/pages/chat_detail_page.dart';
 import 'package:navigation_2/feature/auth/domain/entities/user_entity.dart';
+import 'package:navigation_2/feature/chat/domain/entities/user_entity.dart' as userChat;
+
 import 'package:navigation_2/feature/splash/splash_page.dart';
 import 'package:navigation_2/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -140,7 +143,19 @@ final appRouter = GoRouter(
         ),
         StatefulShellBranch(
           routes: [
-            GoRoute(path: "/chat", builder: (context, state) => MyChatPage()),
+            GoRoute(
+              path: "/chat",
+              builder: (context, state) => const MyChatPage(),
+              routes: [
+                GoRoute(
+                  path: "chatDetail",
+                  builder: (context, state) {
+                    final targetUser = state.extra as userChat.UserEntity;
+                    return ChatDetailPage(targetUser: targetUser);
+                  },
+                ),
+              ],
+            ),
           ],
         ),
         StatefulShellBranch(
