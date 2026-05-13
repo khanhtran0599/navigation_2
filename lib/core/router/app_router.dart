@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:navigation_2/core/di/service_locator.dart';
 import 'package:navigation_2/feature/chat/my_chat_page.dart';
 import 'package:navigation_2/feature/home/domain/entities/place_dog_walk_entity.dart';
 import 'package:navigation_2/feature/home/my_home_page.dart';
@@ -7,15 +8,14 @@ import 'package:navigation_2/feature/home/presentaions/pages/my_place_dogwalk_de
 import 'package:navigation_2/feature/moment/my_moment_page.dart';
 import 'package:navigation_2/feature/moment/presentaions/pages/detail_post_page.dart';
 import 'package:navigation_2/feature/profile/my_profile_page.dart';
+import 'package:navigation_2/feature/profile/presentations/bloc/profile_bloc.dart';
+import 'package:navigation_2/feature/profile/presentations/bloc/profile_event.dart';
+import 'package:navigation_2/feature/profile/presentations/pages/edit_profile_page.dart';
 import 'package:navigation_2/feature/profile/presentations/sub_setting.dart';
+import 'package:navigation_2/feature/auth/domain/entities/user_entity.dart';
 import 'package:navigation_2/feature/splash/splash_page.dart';
 import 'package:navigation_2/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:navigation_2/feature/auth/data/data_source/auth_remote_data_source.dart';
-import 'package:navigation_2/feature/auth/data/repositories/auth_repository_impl.dart';
-import 'package:navigation_2/feature/auth/domain/usecases/sign_in_usecase.dart';
-import 'package:navigation_2/feature/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:navigation_2/feature/auth/presentaions/bloc/login/login_bloc.dart';
 import 'package:navigation_2/feature/auth/presentaions/bloc/register/register_bloc.dart';
 import 'package:navigation_2/feature/auth/presentaions/pages/login_page.dart';
@@ -69,13 +69,7 @@ final appRouter = GoRouter(
       path: "/login",
       builder: (context, state) => BlocProvider(
         create: (context) => LoginBloc(
-          signInUseCase: SignInUseCase(
-            AuthRepositoryImpl(
-              remoteDataSource: AuthRemoteDataSourceImpl(
-                firebaseAuth: FirebaseAuth.instance,
-              ),
-            ),
-          ),
+          signInUseCase: sl(),
         ),
         child: const LoginPage(),
       ),
@@ -85,13 +79,7 @@ final appRouter = GoRouter(
       path: "/register",
       builder: (context, state) => BlocProvider(
         create: (context) => RegisterBloc(
-          signUpUseCase: SignUpUseCase(
-            AuthRepositoryImpl(
-              remoteDataSource: AuthRemoteDataSourceImpl(
-                firebaseAuth: FirebaseAuth.instance,
-              ),
-            ),
-          ),
+          signUpUseCase: sl(),
         ),
         child: const RegisterPage(),
       ),
@@ -157,13 +145,38 @@ final appRouter = GoRouter(
         ),
         StatefulShellBranch(
           routes: [
-            GoRoute(
-              path: "/profile",
-              builder: (context, state) => MyProfilePage(),
+            ShellRoute(
+              builder: (context, state, child) {
+                return BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, authState) {
+                    if (authState is Authenticated) {
+                      return BlocProvider(
+                        create: (context) => sl<ProfileBloc>()
+                          ..add(FetchUserProfile(authState.user.id)),
+                        child: child,
+                      );
+                    }
+                    return child;
+                  },
+                );
+              },
               routes: [
                 GoRoute(
-                  path: "setting",
-                  builder: (context, state) => MySettingPage(),
+                  path: "/profile",
+                  builder: (context, state) => const MyProfilePage(),
+                  routes: [
+                    GoRoute(
+                      path: "setting",
+                      builder: (context, state) => MySettingPage(),
+                    ),
+                    GoRoute(
+                      path: "editProfile",
+                      builder: (context, state) {
+                        final user = state.extra as UserEntity;
+                        return EditProfilePage(user: user);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

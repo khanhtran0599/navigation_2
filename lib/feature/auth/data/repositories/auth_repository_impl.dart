@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:navigation_2/core/error/failure.dart';
 import 'package:navigation_2/feature/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:navigation_2/feature/auth/data/model/user_model.dart';
 import 'package:navigation_2/feature/auth/domain/entities/user_entity.dart';
 import 'package:navigation_2/feature/auth/domain/repositories/auth_repository.dart';
 
@@ -57,6 +58,37 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final userModel = await remoteDataSource.getCurrentUser();
       return Right(userModel);
+    } catch (e) {
+      return Left(ServerFalure(e.toString()));
+    }
+  }
+
+  /// Gọi Data Source để lấy thông tin chi tiết từ Firestore.
+  @override
+  Future<Either<Failure, UserEntity>> getUserProfile(String uid) async {
+    try {
+      final userModel = await remoteDataSource.getUserProfile(uid);
+      return Right(userModel);
+    } catch (e) {
+      return Left(ServerFalure(e.toString()));
+    }
+  }
+
+  /// Gọi Data Source để cập nhật thông tin.
+  @override
+  Future<Either<Failure, void>> updateUserProfile(UserEntity user) async {
+    try {
+      final userModel = UserModel(
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        gender: user.gender,
+        dob: user.dob,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+      );
+      await remoteDataSource.updateUserProfile(userModel);
+      return const Right(null);
     } catch (e) {
       return Left(ServerFalure(e.toString()));
     }

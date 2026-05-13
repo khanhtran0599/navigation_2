@@ -6,18 +6,18 @@ import 'package:navigation_2/core/constants/icon_asset_url.dart';
 import 'package:navigation_2/core/router/app_router.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navigation_2/feature/auth/data/data_source/auth_remote_data_source.dart';
-import 'package:navigation_2/feature/auth/data/repositories/auth_repository_impl.dart';
-import 'package:navigation_2/feature/auth/domain/usecases/get_current_user_usecase.dart';
-import 'package:navigation_2/feature/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:navigation_2/feature/auth/presentaions/bloc/auth/auth_bloc.dart';
 import 'package:navigation_2/feature/auth/presentaions/bloc/auth/auth_event.dart';
+import 'package:navigation_2/core/di/service_locator.dart' as di;
+import 'package:navigation_2/core/di/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Initialize dependencies
+  await di.init();
+
   // Initialize Firebase (Assuming firebase_options is configured, otherwise it defaults)
   try {
     await Firebase.initializeApp();
@@ -38,18 +38,12 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) {
-            final authRepository = AuthRepositoryImpl(
-              remoteDataSource: AuthRemoteDataSourceImpl(
-                firebaseAuth: FirebaseAuth.instance,
-              ),
-            );
-            return AuthBloc(
-              getCurrentUserUseCase: GetCurrentUserUseCase(authRepository),
-              signOutUseCase: SignOutUseCase(authRepository),
-            )..add(AppStarted());
-          },
+          create: (context) => AuthBloc(
+            getCurrentUserUseCase: sl(),
+            signOutUseCase: sl(),
+          )..add(AppStarted()),
         ),
+        
       ],
       child: MaterialApp.router(
         title: 'Navigation 2.0',

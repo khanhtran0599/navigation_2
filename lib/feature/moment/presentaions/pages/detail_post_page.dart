@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:navigation_2/core/network/dio_client.dart';
+import 'package:navigation_2/core/di/service_locator.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
 import 'package:navigation_2/core/theme/app_text_styles.dart';
 import 'package:navigation_2/core/widgets/error_widget.dart';
 import 'package:navigation_2/feature/moment/bloc/comment/comment_bloc.dart';
 import 'package:navigation_2/feature/moment/bloc/comment/comment_event.dart';
 import 'package:navigation_2/feature/moment/bloc/comment/comment_state.dart';
-import 'package:navigation_2/feature/moment/data/data_source/data_remote.dart';
-import 'package:navigation_2/feature/moment/data/repositories/get_comment_repository_impl.dart';
 import 'package:navigation_2/feature/moment/domain/entities/comment_entity.dart';
 import 'package:navigation_2/feature/moment/domain/usecases/get_comment_usecase.dart';
 
-/// [DetailPostPage] là trang hiển thị thông tin chi tiết của một bài đăng cụ thể.
 class DetailPostPage extends StatefulWidget {
-  /// Mã ID của bài đăng cần xem chi tiết, được truyền vào từ màn hình trước
   final int postID;
   const DetailPostPage({super.key, required this.postID});
 
@@ -30,23 +26,8 @@ class _DetailPostPageState extends State<DetailPostPage> {
   void initState() {
     super.initState();
 
-    // Khởi tạo Dio client dùng để gọi API.
-    final dio = DioClient.init();
-
-    // Khởi tạo lớp remote source, chịu trách nhiệm gọi API trực tiếp.
-    final getCommentRemoteSource = GetCommentRemoteSource(dio: dio);
-
-    // Khởi tạo repository, chịu trách nhiệm lấy dữ liệu từ remote source
-    // và ánh xạ qua các lớp domain nếu cần.
-    final getCommentRepository = GetCommentRepositoryImpl(
-      getCommentRemoteSource: getCommentRemoteSource,
-    );
-
-    // Khởi tạo use case. Use case thực hiện logic nghiệp vụ riêng biệt
-    // và được đưa vào bloc để quản lý luồng dữ liệu.
-    getCommentsUseCase = GetCommentsUsecase(
-      getCommentRepository: getCommentRepository,
-    );
+    // Khởi tạo Use Case từ GetIt
+    getCommentsUseCase = sl<GetCommentsUsecase>();
   }
 
   @override

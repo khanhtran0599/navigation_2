@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:navigation_2/core/network/dio_client.dart';
+import 'package:navigation_2/core/di/service_locator.dart';
 import 'package:navigation_2/core/theme/app_colors.dart';
 import 'package:navigation_2/core/usecase/usecase.dart';
-import 'package:navigation_2/feature/chat/data/data_source/data_remote.dart';
-import 'package:navigation_2/feature/chat/data/repositories/get_user_repository_impl.dart';
 import 'package:navigation_2/feature/chat/domain/entities/user_entity.dart';
 import 'package:navigation_2/feature/chat/domain/usecases/get_user_usecase.dart';
 
-/// [MyChatPage] hiển thị danh sách các cuộc hội thoại và tin nhắn của người dùng.
-/// Đây là một nhánh chính trong Bottom Navigation Bar.
 class MyChatPage extends StatefulWidget {
   const MyChatPage({super.key});
 
@@ -31,19 +27,8 @@ class _MyChatPageState extends State<MyChatPage> {
 
   @override
   void initState() {
-    // Khởi tạo Dio client
-    final dio = DioClient.init();
-
-    // Khởi tạo Remote Source
-    final getUserRemoteSource = GetUserRemoteSource(dio: dio);
-
-    // Khởi tạo Repository
-    final getUserRepository = GetUserRepositoryImpl(
-      getUserRemoteSource: getUserRemoteSource,
-    );
-
-    // Khởi tạo Use Case
-    usersUseCase = GetUsersUseCase(getUserRepository: getUserRepository);
+    // Khởi tạo Use Case từ GetIt
+    usersUseCase = sl<GetUsersUseCase>();
 
     // Bắt đầu gọi API lấy dữ liệu người dùng
     getUser();

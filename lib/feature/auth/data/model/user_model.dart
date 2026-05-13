@@ -9,6 +9,10 @@ class UserModel extends UserEntity {
     required super.id,
     super.email,
     super.name,
+    super.gender,
+    super.dob,
+    super.phoneNumber,
+    super.address,
   });
 
   /// Hàm Factory giúp chuyển đổi dữ liệu từ đối tượng [User] của Firebase 
@@ -19,5 +23,31 @@ class UserModel extends UserEntity {
       email: user.email,
       name: user.displayName,
     );
+  }
+
+  /// Hàm Factory giúp chuyển đổi dữ liệu từ Firestore Document 
+  /// thành đối tượng [UserModel].
+  factory UserModel.fromFirestore(Map<String, dynamic> data) {
+    return UserModel(
+      id: data['uid'] ?? '',
+      email: data['email'],
+      name: data['name'],
+      gender: data['gender'],
+      dob: data['dob'],
+      phoneNumber: data['phoneNumber'],
+      address: data['address'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': id,
+      'email': email,
+      'name': name,
+      'gender': gender,
+      'dob': dob,
+      'phoneNumber': phoneNumber,
+      'address': address,
+    };
   }
 }

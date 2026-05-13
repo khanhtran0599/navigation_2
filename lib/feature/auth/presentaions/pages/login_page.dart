@@ -46,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           if (state is LoginSuccess) {
             context.read<AuthBloc>().add(LoggedIn());
-            context.go('/home');
           } else if (state is LoginFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

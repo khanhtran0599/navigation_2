@@ -19,4 +19,10 @@ abstract class AuthRepository {
   
   /// Lấy thông tin user đang đăng nhập hiện tại (Session/Cache). Trả về null nếu chưa đăng nhập.
   Future<Either<Failure, UserEntity?>> getCurrentUser();
+
+  /// Lấy thông tin chi tiết người dùng từ Firestore.
+  Future<Either<Failure, UserEntity>> getUserProfile(String uid);
+
+  /// Cập nhật thông tin người dùng.
+  Future<Either<Failure, void>> updateUserProfile(UserEntity user);
 }

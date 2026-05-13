@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:navigation_2/core/network/dio_client.dart';
+import 'package:navigation_2/core/di/service_locator.dart';
 import 'package:navigation_2/feature/moment/bloc/post/post_bloc.dart';
 import 'package:navigation_2/feature/moment/bloc/post/post_event.dart';
 import 'package:navigation_2/feature/moment/bloc/post/post_state.dart';
-import 'package:navigation_2/feature/moment/data/data_source/data_remote.dart';
-import 'package:navigation_2/feature/moment/data/repositories/get_post_repository_impl.dart';
 import 'package:navigation_2/feature/moment/domain/entities/post_entity.dart';
 import 'package:navigation_2/feature/moment/domain/usecases/get_post_usecase.dart';
 import 'package:navigation_2/feature/moment/presentaions/widgets/post_item_widget.dart';
 
-/// [MyMomentPage] hiển thị các khoảnh khắc, bài đăng của người dùng và bạn bè.
-/// Đây là một nhánh chính trong Bottom Navigation Bar để xem các tin đăng mới nhất.
 class MyMomentPage extends StatefulWidget {
   const MyMomentPage({super.key});
 
@@ -28,21 +24,8 @@ class _MyMomentPageState extends State<MyMomentPage> {
   void initState() {
     super.initState();
 
-    // Khởi tạo Dio client dùng để gọi API.
-    final dio = DioClient.init();
-
-    // Khởi tạo lớp remote source, chịu trách nhiệm gọi API trực tiếp.
-    final getPostRemoteSource = GetPostRemoteSource(dio: dio);
-
-    // Khởi tạo repository, chịu trách nhiệm lấy dữ liệu từ remote source
-    // và ánh xạ qua các lớp domain nếu cần.
-    final getPostRepository = GetPostRepositoryImpl(
-      getPostRemoteSource: getPostRemoteSource,
-    );
-
-    // Khởi tạo use case. Use case thực hiện logic nghiệp vụ riêng biệt
-    // và được đưa vào bloc để quản lý luồng dữ liệu.
-    getPostsUseCase = GetPostsUseCase(getPostRepository: getPostRepository);
+    // Khởi tạo Use Case từ GetIt
+    getPostsUseCase = sl<GetPostsUseCase>();
   }
 
   @override

@@ -9,6 +9,8 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> signUp(String email, String password, String name);
   Future<void> signOut();
   Future<UserModel?> getCurrentUser();
+  Future<UserModel> getUserProfile(String uid);
+  Future<void> updateUserProfile(UserModel user);
 }
 
 /// [AuthRemoteDataSourceImpl] là phần triển khai thực tế sử dụng [FirebaseAuth].
@@ -79,5 +81,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return UserModel.fromFirebaseUser(user);
     }
     return null;
+  }
+
+  /// Lấy thông tin chi tiết người dùng từ Firestore.
+  @override
+  Future<UserModel> getUserProfile(String uid) async {
+    final doc = await firestore.collection('users').doc(uid).get();
+    if (doc.exists && doc.data() != null) {
+      return UserModel.fromFirestore(doc.data()!);
+    } else {
+      throw Exception('User not found in Firestore');
+    }
+  }
+
+  /// Cập nhật thông tin người dùng lên Firestore.
+  @override
+  Future<void> updateUserProfile(UserModel user) async {
+    await firestore.collection('users').doc(user.id).update(user.toJson());
   }
 }

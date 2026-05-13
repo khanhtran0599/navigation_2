@@ -13,12 +13,28 @@ class UserEntity extends Equatable {
   /// Tên hiển thị của người dùng.
   final String? name;
 
+  /// Giới tính của người dùng.
+  final String? gender;
+
+  /// Ngày tháng năm sinh.
+  final String? dob;
+
+  /// Số điện thoại.
+  final String? phoneNumber;
+
+  /// Địa chỉ.
+  final String? address;
+
   const UserEntity({
     required this.id,
     this.email,
     this.name,
+    this.gender,
+    this.dob,
+    this.phoneNumber,
+    this.address,
   });
 
   @override
-  List<Object?> get props => [id, email, name];
+  List<Object?> get props => [id, email, name, gender, dob, phoneNumber, address];
 }

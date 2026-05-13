@@ -48,7 +48,6 @@ class _RegisterPageState extends State<RegisterPage> {
         listener: (context, state) {
           if (state is RegisterSuccess) {
             context.read<AuthBloc>().add(LoggedIn());
-            context.go('/home');
           } else if (state is RegisterFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
